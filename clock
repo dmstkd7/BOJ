@@ -1,0 +1,86 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+vector<int> A;
+vector<int> B;
+vector<int> C;
+
+
+void isSame(int count){
+
+	int dif1, dif2;
+	bool check = true;
+
+	sort(A.begin(), A.end());
+	sort(B.begin(), B.end());
+
+	dif1 = A[0] - B[0];
+	if (dif1 < 0)
+		dif1 += 360000;
+
+	dif2 = A[A.size() -1] - B[0];
+	if (dif2 < 0)
+		dif2 += 360000;
+
+
+	for (int i = 0; i < count; i++){
+		int t = (B[i] + dif1) % 360000;
+		C.push_back(t);
+	}
+		
+	sort(C.begin(), C.end());
+
+	for (int i= 0; i < count; i++){
+		if (C[i] != A[i]){
+			check = false;
+			break;
+		}
+	}
+
+	C.clear();
+
+	if (check == false){
+		check = true;
+		for (int i = 0; i < count; i++){
+			int t = (B[i] + dif2) % 360000;
+			C.push_back(t);
+		}	
+		sort(C.begin(), C.end());
+
+		for (int i = 0; i < count; i++){
+			if (C[i] != A[i]){
+				check = false;
+				break;
+			}
+		}
+	}
+	
+	if (check == false)
+		printf("impossible\n");
+	else
+		printf("possible\n");
+}
+
+int main(void){
+
+	int temp;
+	int count;
+	scanf("%d", &count);
+	for (int i = 0; i < count; i++){
+		scanf("%d", &temp);
+		A.push_back(temp);
+	}
+	for (int i = 0; i < count; i++){
+		scanf("%d", &temp);
+		B.push_back(temp);
+	}
+
+	isSame(count);
+
+
+	return 0;
+}
