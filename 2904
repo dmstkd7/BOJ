@@ -1,0 +1,90 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+using namespace std;
+
+
+int arr[1000010];
+int prime[80000];
+int N[101][80000];
+int temp[1000010];
+
+void makeSosu(){
+
+	int temp = 0;
+
+	for (int i = 2; i <= 1000000; i++){
+		arr[i] = i;
+	}
+
+	for (int i = 2; i <= 1000000; i++){
+		if (arr[i] == 0)
+			continue;
+		for (int j = i + i; j <= 1000000; j += i){
+			arr[j] = 0; 
+		}
+	}
+
+	for (int i = 2; i <= 1000000; i++){
+		if (arr[i] != 0){
+			prime[temp] = arr[i];
+			temp++;
+		}
+	}
+
+	prime[temp] = -1;
+
+	
+}
+
+
+int main(void){
+
+	makeSosu();
+
+	int total = 0;
+	int result = 1;
+
+	int count;
+	int tmp;
+	scanf("%d", &count);
+
+	for (int i = 0; i < count; i++){
+		scanf("%d", &tmp);
+		for (int j = 0; j < 80000; j++){
+			if (prime[j] == -1 || prime[j] > tmp)
+				break;
+			if ((tmp % prime[j]) == 0){
+				temp[j]++;
+				N[i][j]++;
+				tmp /= prime[j];
+				j = -1;
+			}
+		}
+	}
+	
+
+
+	//몇 번 움직였는지 확인하는 것
+	for (int i = 0; i < count; i++){
+		for (int j = 0; j < 800000; j++){
+			int t = temp[j] / count;
+			if (t && t > N[i][j])
+				total += t - N[i][j];
+		}	
+	}
+	
+	//최대 공약수 구하는 것
+	for (int i = 0; i < 800000; i++){
+		if (temp[i] != 0){
+			for (int j = 0; j < (temp[i]/count); j++){
+				result *= prime[i];
+			}
+		}
+	}
+
+	printf("%d %d\n", result, total);
+	
+
+
+	return 0;
+}
