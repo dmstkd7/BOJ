@@ -1,0 +1,121 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+using namespace std;
+ 
+ 
+int length;
+bool checkPatter(char *str){
+     
+    int i = 0;
+    int k,l;
+    bool check = true;
+    bool fin = false;
+ 
+    k = 0;
+    l = 0;
+    while (k != length && check == true){
+        fin = false;
+        switch (l){
+        case 0:
+            if (str[i] == 1) l = 3;
+            if (str[i] == 0) l = 1;
+            break;
+        case 1:
+            if (str[i] == 1){
+                l = 2;
+                fin = true;
+            }
+            if (str[i] == 0)
+                check = false;
+            break;
+        case 2:
+            if (str[i] == 0) l = 1;
+            if (str[i] == 1) l = 3;
+            break;
+        case 3:
+            if (str[i] == 0) l = 4;
+            if (str[i] == 1)
+                check = false;
+            break;
+        case 4:
+            if (str[i] == 0) l = 5;
+            if (str[i] == 1)
+                check = false;
+            break;
+        case 5:
+            if (str[i] == 1){
+                l = 6;
+                fin = true;
+            }
+            if (str[i] == 0) l = 5;
+            break;
+        case 6:
+            if (str[i] == 0) l = 1;
+            if (str[i] == 1){
+                l = 7;
+                fin = true;
+            }
+            break;
+        case 7:
+            if (str[i] == 0 && k==length-1){
+                check = false;
+                break;
+            }
+            if (str[i] == 1){
+                fin = true;
+                l = 7;
+            }
+            if (str[i] == 0 && str[i + 1] == 0) l = 4;
+            if (str[i] == 0 && str[i + 1] == 1) l = 1;
+     
+            break;
+        }
+        i++;
+        k++;
+ 
+ 
+    }
+ 
+    //fin 이 false면
+    if (!fin){
+        check = false;
+    }
+     
+ 
+    return check;
+}
+ 
+int main(void){
+ 
+    int Test_Case;
+    char temp[202];
+    bool result;
+    //freopen("input.txt", "r", stdin);
+ 
+ 
+    scanf("%d", &Test_Case);
+    for (int i = 1; i <= Test_Case; ++i){
+        length = 0;
+        for (int i = 0; i < 202; ++i)
+            temp[i] = 0;
+        scanf("%s", temp);
+ 
+        //받은 숫자 temp에 하나하나씩 받게 설정
+        int j = 0;
+        while (temp[j] != '\0'){
+            temp[j] -= 48;
+            j++;
+        }
+        length = j;
+ 
+        result = checkPatter(temp);
+ 
+        if (result == false)
+            printf("NO\n");
+        else
+            printf("YES\n");
+ 
+    }
+ 
+    return 0;
+}
