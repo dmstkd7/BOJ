@@ -1,0 +1,80 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <utility>
+using namespace std;
+
+const int MAX_V = 110;
+
+vector< pair<int, int> > selected;
+int adj[MAX_V][MAX_V];
+
+int getDistance(pair<int, int> a, pair<int, int> b){
+	return abs(a.first - b.first) + abs(a.second - b.second);
+}
+
+
+
+void setDistance(){
+	int  result;
+	for (int i = 0; i < selected.size(); ++i){
+		for (int j = 0; j < selected.size(); ++j){
+			result = getDistance(selected[i], selected[j]);
+			if (result <= 1000)
+				adj[i][j] = 0;
+			else
+				adj[i][j] = 1;
+		}
+	}
+	
+}
+
+bool check(int first, int last, int V){
+
+	for (int k = 0; k < V; ++k)
+		for (int i = 0; i < V; ++i)
+			for (int j = 0; j < V; ++j){
+				if (adj[i][j] > adj[i][k] + adj[k][j])
+					adj[i][j] = adj[i][k] + adj[k][j];
+			}
+				
+	return adj[first][last];
+}
+
+int main(void){
+
+	int Test_Case;
+	int convenience;
+	int tmp1, tmp2;
+	bool result;
+
+
+	//freopen("input.txt", "r", stdin);
+	scanf("%d", &Test_Case);
+	for (int i = 1; i <= Test_Case; ++i){
+		selected.clear();
+		for (int i = 0; i < MAX_V; ++i)
+			for (int j = 0; j < MAX_V; ++j)
+				adj[i][j] = 0;
+		scanf("%d", &convenience);
+
+		for (int i = 0; i < convenience + 2 ; ++i){
+			scanf("%d%d", &tmp1, &tmp2);
+			selected.push_back(make_pair(tmp1, tmp2));
+		}
+
+		setDistance();
+		result = check(0, convenience + 1, convenience + 2);
+
+		if (!result)
+			printf("happy\n");
+		else
+			printf("sad\n");
+
+	}
+
+	return 0;
+}
