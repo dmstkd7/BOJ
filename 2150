@@ -1,0 +1,106 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <utility>
+#include <stack>
+#include <stdlib.h>
+using namespace std;
+
+int vertex[10001];
+
+vector<int> adj[10001];
+vector<int> discovered;
+vector<int> sccId;
+vector<int> sccAr[10001];
+stack<int> st;
+int sccCounter, vertexCounter;
+
+
+int SCC(int here){
+
+	int ret;
+	ret = discovered[here] = vertexCounter++;
+
+	st.push(here);
+
+	for (int i = 0; i < adj[here].size(); ++i){
+		int there = adj[here][i];
+
+		//만약 처음 방문하는거라면
+		if (discovered[there] == -1){
+			ret = min(ret, SCC(there));
+		}
+		//처음 방문은 아니지만 sccId를 형성하지 않앗다면
+		else if (sccId[there] == -1){
+			ret = min(ret, discovered[there]);
+		}
+	}
+	//만약 돌고 돌아 한바퀴를 형성했다면
+	if (ret == discovered[here]){
+		while(true){
+			int t = st.top();
+			st.pop();
+			sccId[t] = sccCounter;
+			sccAr[sccCounter].push_back(t);
+			if (t == here) break;
+		}
+		sccCounter++;
+	}
+	
+	return ret;
+}
+
+
+
+int main(void){
+
+	int Test_Case;
+	int V, E;
+	int v1, v2;
+	//freopen("input.txt", "r", stdin);
+	//scanf("%d", &Test_Case);
+	Test_Case = 1;
+	for (int i = 1; i <= Test_Case; ++i){
+		sccCounter = vertexCounter = 0;
+		scanf("%d%d", &V, &E);
+		sccId = discovered = vector<int>(V+1, -1);
+		for (int i = 0; i < E; ++i){
+			scanf("%d%d", &v1, &v2);
+			adj[v1].push_back(v2);
+		}
+
+		for (int i = 1; i <= V; ++i){
+			if (discovered[i] == -1)
+				SCC(i);
+		}
+			
+		for (int i = 0; i < sccCounter; ++i){
+			sort(sccAr[i].begin(), sccAr[i].end());
+		}
+
+
+		//이중 배열 쏘팅을 어떻게 할까
+		for (int i = 0; i < sccCounter; ++i){
+			for (int j = 0; j < sccCounter; ++j){
+				if (sccAr[i][0] < sccAr[j][0])
+					swap(sccAr[i], sccAr[j]);
+			}
+		}
+	
+	
+		printf("%d\n", sccCounter);
+		for (int i = 0; i < sccCounter; ++i){
+			for (int j = 0; j < sccAr[i].size(); ++j)
+				printf("%d ", sccAr[i][j]);
+			printf("%d\n", -1);
+		}
+		//scc가 나눠진 갯수 sccCounter로 세면 되는거고
+		//sccCounter1인거 정렬,2,3 정렬한거 나타내면 되겠다
+			
+	}
+
+	return 0;
+}
