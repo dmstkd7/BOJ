@@ -1,0 +1,84 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <utility>
+using namespace std;
+
+
+const int INF = 987654321;
+const int MAX_V = 501;
+
+
+vector< pair<int, int> > adj[MAX_V];
+
+int V;
+
+
+
+void bellmanford(){
+
+	vector<int> upper(V+1, INF);
+	bool check = false;
+	
+	upper[1] = 0;
+
+	//일단 V-1번 돌린다
+	for (int iter = 0; iter < V - 1; ++iter){
+		for (int here = 1; here <= V; ++here){
+			for (int i = 0; i < adj[here].size(); ++i){
+				int there = adj[here][i].first;
+				int cost = adj[here][i].second;
+				upper[there] = min(upper[there], upper[here] + cost);
+			}
+		}
+	}
+
+	
+	for (int here = 1; here <= V; ++here){
+		for (int i = 0; i < adj[here].size(); ++i){
+			int there = adj[here][i].first;
+			int cost = adj[here][i].second;
+			//만약 완화가 되었어
+			if (upper[there] > upper[here] + cost)
+				check = true;
+		}
+		
+	}
+	//완화가 되었다면 중간에 마이너스가 있는것이니 -1 출력
+	if (check){
+		printf("%d\n", -1);
+		return;
+	}
+		
+	for (int i = 2; i <= V; ++i)
+		printf("%d\n", upper[i] < INF - 100000 ? upper[i] : -1);
+	return;
+}
+
+
+int main(void){
+
+	int Test_Case;
+	int E;
+	int v1, v2, c;
+	int result;
+	//freopen("input.txt", "r", stdin);
+	//scanf("%d", &Test_Case);
+	Test_Case = 1;
+	for (int i = 1; i <= Test_Case; ++i){
+		scanf("%d%d", &V, &E);
+		for (int i = 0; i < E; i++){
+			scanf("%d%d%d", &v1, &v2, &c);
+			adj[v1].push_back(make_pair(v2, c));
+		}
+
+
+		bellmanford();
+
+	}
+
+	return 0;
+}
