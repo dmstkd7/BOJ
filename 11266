@@ -1,0 +1,104 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <memory.h>
+using namespace std;
+
+vector<int> adj[10010];
+vector<int> juldanjum;
+int orderFound[10010];
+
+//정점의 갯수
+int V;
+//카운트 수
+int counter = 0;
+
+int findCutVertex(int here, bool isroot){
+	//printf("here %d\n", here);
+	orderFound[here] = counter++;
+	int ret = orderFound[here];
+	int child = 0;
+	for (int i = 0; i < adj[here].size(); ++i){
+		int there = adj[here][i];
+
+
+		//처음 방문하는 것이라면
+		if (orderFound[there] == -1){
+			child++;
+			int subtree = findCutVertex(there, false);
+			if (!isroot && subtree >= orderFound[here]){
+				juldanjum.push_back(here);
+			}
+			ret = min(ret, subtree);
+		}
+		else{
+			ret = min(ret, orderFound[there]);
+		}
+	}
+
+	if (isroot && child>1)
+		juldanjum.push_back(here);
+
+	return ret;
+}
+
+
+int main(void){
+
+	int Test_Case;
+	int E;
+	int v1, v2;
+	int k, temp;
+
+	//freopen("input.txt", "r", stdin);
+
+
+	//scanf("%d", &Test_Case); 젠장 한번이었네
+	for (int i = 1; i <= 1; ++i){
+		//초기화 해준다
+		for (int i = 0; i < 10010; ++i)
+			adj[i].clear();
+
+		juldanjum.clear();
+		memset(orderFound, -1, sizeof(orderFound));
+		k = 0;
+		V = 0;
+		counter = 0;
+
+
+		scanf("%d%d", &V, &E);
+
+		for (int i = 0; i < E; ++i){
+			scanf("%d%d", &v1, &v2);
+			adj[v1].push_back(v2);
+			adj[v2].push_back(v1);
+		}
+
+
+		for (int i = 1; i <= V; i++){
+			if (orderFound[i] == -1)
+				findCutVertex(i, true);
+		}
+
+		//findCutVertex(i, true);
+
+		sort(juldanjum.begin(), juldanjum.end());
+		juldanjum.erase(unique(juldanjum.begin(), juldanjum.end()), juldanjum.end());
+		//중복을 제거해야해
+
+		printf("%d\n", juldanjum.size());
+		for (k = 0; k < juldanjum.size(); ++k){
+			printf("%d", juldanjum[k]);
+			if (k != juldanjum.size() - 1)
+				printf(" ");
+			else
+				printf("\n");
+		}
+
+	}
+
+	return 0;
+}
