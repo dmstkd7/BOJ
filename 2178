@@ -1,0 +1,87 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <utility>
+using namespace std;
+
+
+const int MAX = 987654321;
+
+
+int c[110][110];			
+ 
+
+void getCount(int N, int M){
+
+	int H, W;
+	queue< pair<int, int> > q;
+	pair<int, int> temp;
+	c[1][1] = 1;
+	q.push(make_pair(1, 1));
+
+	while (!q.empty()){
+		temp = q.front();
+		q.pop();
+		H = temp.first;
+		W = temp.second;
+		if (c[H][W + 1] == MAX){
+			c[H][W + 1] = c[H][W] + 1;
+			q.push(make_pair(H, W + 1));
+		}
+		if (c[H + 1][W] == MAX){
+			c[H + 1][W] = c[H][W] + 1;
+			q.push(make_pair(H+1,W));
+		}
+		if (c[H - 1][W] == MAX){
+			c[H - 1][W] = c[H][W] + 1;
+			q.push(make_pair(H-1, W));
+		}
+		if (c[H][W-1] == MAX){
+			c[H][W - 1] = c[H][W] + 1;
+			q.push(make_pair(H, W-1));
+		}
+
+		if (c[N][M] != MAX)
+			break;
+
+	}
+	return;
+}
+
+
+int main(void){
+
+	int Test_Case;
+	int H, W;
+	char temp[110];
+	int temp2;
+	int result;
+
+//	freopen("input.txt", "r", stdin);
+//	scanf("%d", &Test_Case);
+	for (int i = 1; i <= 1; ++i){
+		for (int i = 0; i < 110; ++i)
+			for (int j = 0; j < 110; ++j)
+				c[i][j] = -1;
+
+		scanf("%d%d", &H, &W);
+		for (int i = 1; i <= H; ++i){
+			scanf("%s", &temp);
+			for (int j = 1; j <= W; ++j){
+				temp2 = (int)temp[j-1] - '0';
+				if (temp2 == 1)
+					c[i][j] = MAX;
+				else
+					c[i][j] = -1;
+			}
+		}
+
+		getCount(H,W);
+		printf("%d\n", c[H][W]);
+	}
+
+	return 0;
+}
