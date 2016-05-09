@@ -2,45 +2,39 @@
 #include <cstdio>
 #include <algorithm>
 using namespace std;
-
-
-// D[i][j] = i칸 j열에서 최대값
-// D[i][j] = max(D[i+1][j], D[i+1][j+1]) + W[i][j]
-
-
-int D[501][501];
-int W[501][501];
+ 
+ 
+// D[i][0] = i칸이 사자가 없을 때 경우의 수 
+// D[i][1] = i칸에 사자가 있을 때 경우의 수
+// D[i][0] = D[i-1][0] + D[i-1][1]
+// D[i][1] = 2 * D[i-1] + D[i-1][1]
+ 
+ 
+int D[200002][2];
 int N;
-
-int go(int x,int y){
-	if (y > N)
-		return 0;
-	else{
-		if (D[x][y] > 0)
-			return D[x][y];
-
-		D[x][y] = max(go(x, y + 1), go(x + 1, y + 1)) + W[x][y];
-		return D[x][y];
-	}
-
+ 
+ 
+int count(){
+    D[1][0] = 1;
+    D[1][1] = 2;
+     
+    for (int i = 2; i <= N; i++){
+        D[i][0] = ( D[i - 1][0] + D[i - 1][1] ) % 9901;
+        D[i][1] = ( 2 * D[i - 1][0] + D[i - 1][1] ) % 9901;
+    }
+     
+    return D[N][0] + D[N][1];
+ 
 }
-
-
+ 
+ 
 int main(void){
-
-	int tmp;
-	scanf("%d", &N);
-	
-	//입력파트
-	for (int i = 1; i <= N; i++){
-		for (int j = 1; j <= i; j++){
-			scanf("%d", &tmp);
-			W[j][i] = tmp;
-		}
-	}
-
-	printf("%d", go(1,1));
-
-
-	return 0;
+ 
+    int tmp;
+    scanf("%d", &N);
+ 
+    printf("%d", count()%9901);
+ 
+ 
+    return 0;
 }
