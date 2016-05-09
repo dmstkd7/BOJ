@@ -1,0 +1,60 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+
+// D[y][x] = x, y 위치에서 판다가 살아남아 있을 수 있는 것중에 최고
+// D[y][x] = (x,y+1),(x, y-1), (x-1,y), (x+1,y)  중에서 d[y][x]보다 크고 그들 중 max 값 + 1
+
+
+int W[502][502];
+int D[502][502];
+int N;
+int dx[4] = { 0, 0, 1, -1 };
+int dy[4] = { 1, -1, 0, 0 };
+
+int go(int x, int y){
+
+
+	if (D[y][x] > 0) return D[y][x];
+	else{
+		for (int k = 0; k < 4; k++){
+			int nx = x + dx[k];
+			int ny = y + dy[k];
+
+			if (1 <= nx && nx <= N && 1 <= ny && ny <=N){
+				if (W[y][x] > W[ny][nx])
+					D[y][x] = max(D[y][x]+1, go(nx, ny));
+			}		
+		}
+		if (D[y][x] == 0)
+			return D[y][x] = 1;
+	}
+
+}
+
+
+int main(void){
+
+	int tmp;
+	scanf("%d", &N);
+	
+	for (int i = 1; i <= N; i++){
+		for (int j = 1; j <= N; j++){
+			scanf("%d", &tmp);
+			W[i][j] = tmp;
+		}
+	}
+
+
+	//for (int i = 1; i <= N; i++){
+	//	for (int j = 1; j <= N; j++){
+
+
+	printf("%d", go(1, 1));
+	//입력파트
+	
+
+	return 0;
+}
