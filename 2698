@@ -1,0 +1,41 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+using namespace std;
+
+
+int N, M;
+int D[101][101][2];
+
+void pre(){
+
+	D[1][0][0] = 1;
+	D[1][1][1] = 0;
+	D[1][0][1] = 1;
+	D[1][1][0] = 0;
+
+	for (int i = 2; i <= 100; i++){
+		for (int j = 0; j <= i-1; j++){
+				D[i][j][0] = D[i - 1][j][0] + D[i - 1][j][1];
+				D[i][j][1] = D[i - 1][j - 1][1] + D[i - 1][j][0];
+		}
+	}
+
+	
+}
+
+
+int main(void){
+
+	pre();
+
+	int T;
+	scanf("%d", &T);
+	for (int i = 0; i < T; i++){
+		scanf("%d %d", &N, &M);
+		printf("%d\n", D[N][M][0]+D[N][M][1]);
+
+	}
+
+
+	return 0;
+}
