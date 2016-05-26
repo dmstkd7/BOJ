@@ -1,0 +1,35 @@
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int s[50001];
+int a[50001];
+int d[50001][4];
+
+
+
+int main(void){
+	ios_base::sync_with_stdio(false);
+
+	int n, m;
+	cin >> n;
+
+	for (int i = 1; i <= n; i++){
+		cin >> a[i];
+		s[i] = s[i - 1] + a[i];
+	}
+	cin >> m;
+
+	for (int j = 1; j < 4; j++){
+		for (int i = m*j; i <= n; i++){
+			d[i][j] = d[i - 1][j];
+			d[i][j] = max(d[i][j], d[i - m][j - 1] + s[i] - s[i - m]);
+		}
+	}
+	
+	cout << d[n][3] << endl;
+
+
+	return 0;
+}
