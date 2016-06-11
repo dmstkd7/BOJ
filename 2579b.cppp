@@ -1,0 +1,23 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+#define max(a,b) (((a)>(b))?(a):(b))
+using namespace std;
+
+long long dp[301];
+long long a[301];
+int main(void){
+
+	int N;
+	scanf("%d", &N);
+	for (int i = 1; i <= N; i++)
+		scanf("%lld", &a[i]);
+
+	dp[1] = a[1];
+	dp[2] = a[1] + a[2];
+
+	for (int i = 3; i <= N; i++)
+		dp[i] = max(dp[i - 2] + a[i], dp[i - 3] + a[i - 1] + a[i]);
+	
+	printf("%d", dp[N]);
+	return 0;
+}
