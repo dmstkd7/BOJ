@@ -11,10 +11,10 @@ vector<int> aMatch, bMatch;
 vector<bool> visited;
  
 bool dfs(int a) {
-     
+ 
     if (visited[a] == true) return false;
     visited[a] = true;
-     
+ 
     for (int i = 0; i < adj[a].size(); i++) {
         int there = adj[a][i];
         if (bMatch[there] == false || dfs(bMatch[there])) {
@@ -38,10 +38,11 @@ int bipartiteMatch() {
         if (dfs(start))
             cnt++;
     }
-     
+ 
  
     int k = 0;
     for (int start = 1; start <= N; start++) {
+        if (cnt == M) break;
         if (k == K) break;
         visited = vector<bool>(N + 1, false);
         if (dfs(start)) {
@@ -49,13 +50,13 @@ int bipartiteMatch() {
             k++;
         }
     }
-     
+ 
     return cnt;
 }
  
 int main(void) {
  
-    int num,t ;
+    int num, t;
     scanf("%d%d%d", &N, &M, &K);
     for (int i = 1; i <= N; i++) {
         scanf("%d", &num);
